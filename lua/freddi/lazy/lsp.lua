@@ -1,40 +1,79 @@
 return {
-  {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-      'saghen/blink.cmp',
-      {
-        "folke/lazydev.nvim",
-        opts = {
-          library = {
-            { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-          },
+    {
+        "neovim/nvim-lspconfig",
+        dependencies = {
+            'saghen/blink.cmp',
+            {
+                "folke/lazydev.nvim",
+                opts = {
+                    library = {
+                        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+                    },
+                },
+            },
         },
-      },
-    },
-    config = function()
-      local capabilities = require('blink.cmp').get_lsp_capabilities()
-      require("lspconfig").lua_ls.setup { capabilites = capabilities }
 
-      vim.api.nvim_create_autocmd('LspAttach', {
-        callback = function(args)
-          local c = vim.lsp.get_client_by_id(args.data.client_id)
-          if not c then return end
+        -- Add hover.nvim for live LSP previews
+        {
+            "lewis6991/hover.nvim",
+            config = function()
+                require("hover").setup {
+                    init = function()
+                        -- Setup keymaps
+                        require("hover.providers.lsp")
+                    end,
+                    preview_opts = {
+                        border = "single"
+                    },
+                    -- Display LSP hover documentation in preview window
+                    preview_window = true,
+                    title = true,
+                    mouse_providers = {
+                        "LSP"
+                    },
+                    mouse_delay = 1000,
+                }
 
-          if vim.bo.filetype == "lua" then
-            -- Format the current buffer on save
-            vim.api.nvim_create_autocmd('BufWritePre', {
-              buffer = args.buf,
-              callback = function()
-                vim.lsp.buf.format({ bufnr = args.buf, id = c.id })
-              end,
+                vim.keymap.set("n", "K", require("hover").hover, {desc = "hover.nvim"})
+                vim.keymap.set("n", "gK", require("hover").hover_select, {desc = "hover.nvim (select)"})
+                vim.keymap.set("n", "<C-p>", function() require("hover").hover_switch("previous") end, {desc = "hover.nvim (previous source)"})
+                vim.keymap.set("n", "<C-n>", function() require("hover").hover_switch("next") end, {desc = "hover.nvim (next source)"})
+            end,
+        },
+
+        config = function()
+            local capabilities = require('blink.cmp').get_lsp_capabilities()
+            require("lspconfig").lua_ls.setup { capabilities = capabilities }
+            require("lspconfig").pylsp.setup { capabilities = capabilities }
+
+            vim.api.nvim_create_autocmd('LspAttach', {
+                callback = function(args)
+                    local c = vim.lsp.get_client_by_id(args.data.client_id)
+                    if not c then return end
+
+                    -- Enable hover preview on cursor hold
+                    vim.api.nvim_create_autocmd("CursorHold", {
+                        buffer = args.buf,
+                        callback = function()
+                            require("hover").hover()
+                        end
+                    })
+
+                    if vim.bo.filetype == "lua" then
+                        -- Format the current buffer on save
+                        vim.api.nvim_create_autocmd('BufWritePre', {
+                            buffer = args.buf,
+                            callback = function()
+                                vim.lsp.buf.format({ bufnr = args.buf, id = c.id })
+                            end,
+                        })
+                    end
+                end,
             })
-          end
         end,
-      })
-    end,
-  }
+    }
 }
+
 -- -- Adapted from a combo of
 -- -- https://lsp-zero.netlify.app/v3.x/blog/theprimeagens-config-from-2022.html
 -- -- https://github.com/ThePrimeagen/init.lua/blob/master/lua/theprimeagen/lazy/lsp.lua
@@ -60,10 +99,10 @@ return {
 --             vim.lsp.protocol.make_client_capabilities(),
 --             cmp_lsp.default_capabilities()
 --         )
--- 
+--
 --         require("fidget").setup({})
 --         require("mason").setup()
--- 
+--
 --         require('mason-lspconfig').setup({
 --             ensure_installed = {
 --                 "lua_ls",
@@ -107,20 +146,20 @@ return {
 --                                 }
 --                             }
 --                         }
--- 
+--
 --                     })
 --                 end
 --             }
 --         })
--- 
+--
 --         local cmp = require('cmp')
 --         local cmp_select = { behavior = cmp.SelectBehavior.Select }
 --         local luasnip = require("luasnip")
--- 
+--
 --         -- this is the function that loads the extra snippets to luasnip
 --         -- from rafamadriz/friendly-snippets
 --         require('luasnip.loaders.from_vscode').lazy_load()
--- 
+--
 --         cmp.setup({
 --             sources = {
 --                 { name = 'path' },

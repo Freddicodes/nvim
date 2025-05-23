@@ -1,7 +1,6 @@
 -- set leader
 vim.g.mapleader = ' '
 
-vim.cmd.colorscheme("catppuccin")
 
 vim.opt.clipboard = "unnamedplus" -- use system keyboard for yank
 

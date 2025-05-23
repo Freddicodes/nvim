@@ -36,7 +36,7 @@ return {
                 }
             end)
 
-            require "freddi.telescope.multigrep".setup()
+            -- require "freddi.telescope.multigrep".setup()
         end
     }
 }

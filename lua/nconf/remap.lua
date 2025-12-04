@@ -42,10 +42,9 @@ vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 -- Better J behavior
 vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position" })
 
-
 -- -- Quick config editing
 vim.keymap.set("n", "<leader>rc", ":e $MYVIMRC<CR>", { desc = "Edit config" })
-vim.keymap.set("n", "<leader>rl", ":so $MYVIMRC<CR>", { desc = "Reload config" })-- Copy Full File-Path
+vim.keymap.set("n", "<leader>rl", ":so $MYVIMRC<CR>", { desc = "Reload config" }) -- Copy Full File-Path
 vim.keymap.set("n", "<leader>pa", function()
 	local path = vim.fn.expand("%:p")
 	vim.fn.setreg("+", path)
@@ -56,18 +55,20 @@ end)
 vim.keymap.set("n", "<leader>c", ":nohlsearch<CR>", { desc = "Clear search highlights" })
 
 -- telescope mapings
-local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = "Find files" })
-vim.keymap.set('n', '<leader>fg', builtin.git_files, { desc = "Search git files" })
-vim.keymap.set('n', '<leader>fl', builtin.live_grep, {desc = "Live grep" })
- --vim.keymap.set('n', ';', builtin.buffers, {})
-vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = "Search buffers" })
-vim.keymap.set('n', '<leader>fd', builtin.diagnostics, {desc = "Search diagnostics" })
-vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = "Search help tags" })
+local builtin = require("telescope.builtin")
+vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
+vim.keymap.set("n", "<leader>fg", builtin.git_files, { desc = "Search git files" })
+vim.keymap.set("n", "<leader>fl", builtin.live_grep, { desc = "Live grep" })
+--vim.keymap.set('n', ';', builtin.buffers, {})
+vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Search buffers" })
+vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "Search diagnostics" })
+vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Search help tags" })
 
 -- Diagnostics
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = "Open diagnostic float" })
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Next diagnostic" })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Diagnostics to location list" })
+vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Open diagnostic float" })
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Diagnostics to location list" })
 
+-- Nvim tree
+vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>", { desc = "Diagnostics to location list", noremap = true })

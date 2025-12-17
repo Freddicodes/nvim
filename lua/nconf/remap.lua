@@ -72,3 +72,50 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Diagnostic
 
 -- Nvim tree
 vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>", { desc = "Diagnostics to location list", noremap = true })
+
+-- lsp keymaps
+vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, { desc = "Go to definition", noremap = true })
+vim.keymap.set("n", "gi", function() vim.lsp.buf.implementation() end, { desc = "Go to implementation", noremap = true })
+vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, { desc = "Hover info", noremap = true })
+vim.keymap.set("n", "<leader>rn", function() vim.lsp.buf.rename() end, { desc = "Rename symbol", noremap = true })
+vim.keymap.set("n", "<leader>ca", function() vim.lsp.buf.code_action() end, { desc = "Code action", noremap = true })
+vim.keymap.set("n", "gr", function() vim.lsp.buf.references() end, { desc = "Go to refrences", noremap = true })
+
+-- execute current python file
+
+-- If this is a script, make it executable, and execute it in a split pane on the right
+-- Had to include quotes around "%" because there are some apple dirs that contain spaces, like iCloud
+vim.keymap.set("n", "<leader>f.", function()
+	local file = vim.fn.expand("%") -- Get the current file name
+	local filetype = vim.bo.filetype -- Get the current filetype
+	local first_line = vim.fn.getline(1) -- Get the first line of the file
+	local escaped_file = vim.fn.shellescape(file) -- Properly escape the file name for shell commands
+
+	if filetype == "python" then
+		vim.cmd("vsplit") -- Split the window vertically
+		vim.cmd("terminal python3 " .. escaped_file) -- Run with python3
+		vim.cmd("startinsert")
+	elseif string.match(first_line, "^#!/") then -- If first line contains shebang
+		vim.cmd("!chmod +x " .. escaped_file) -- Make the file executable
+		vim.cmd("vsplit") -- Split the window vertically
+		vim.cmd("terminal " .. escaped_file) -- Open terminal and execute the file
+		vim.cmd("startinsert") -- Enter insert mode, recommended by echasnovski on Reddit
+	else
+		vim.cmd("echo 'Not a script. Shebang line not found.'")
+	end
+end, { desc = "Execute current file in terminal (if it's a script)" })
+
+
+
+local harpoon = require("harpoon")
+
+vim.keymap.set("n", "<leader>h", function() harpoon:list():add() end, { desc = "Add file to Harpoon" })
+vim.keymap.set("n", "<leader>ho", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "Toggle Harpoon menu" })
+vim.keymap.set("n", "<leader>1", function() harpoon:list():select(1) end, { desc = "Go to Harpoon file 1" })
+vim.keymap.set("n", "<leader>2", function() harpoon:list():select(2) end, { desc = "Go to Harpoon file 2" })
+vim.keymap.set("n", "<leader>3", function() harpoon:list():select(3) end, { desc = "Go to Harpoon file 3" })
+vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end, { desc = "Go to Harpoon file 4" })
+
+-- Toggle previous & next buffers stored within Harpoon list
+vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end, { desc = "Previous Harpoon file" })
+vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end, { desc = "Next Harpoon file" })

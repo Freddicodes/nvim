@@ -1,4 +1,3 @@
-
 vim.g.mapleader = " "
 vim.o.expandtab = true
 vim.o.hlsearch = false
@@ -19,48 +18,48 @@ vim.opt.clipboard = "unnamedplus"
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 vim.lsp.config['lua_ls'] = {
-  cmd = { 'lua-language-server' },
-  filetypes = { 'lua' },
-  root_markers = { '.luarc.json', '.luarc.jsonc', '.git' },
+    cmd = { 'lua-language-server' },
+    filetypes = { 'lua' },
+    root_markers = { '.luarc.json', '.luarc.jsonc', '.git' },
 
-  settings = {
-    Lua = {
-      runtime = {
-        version = 'LuaJIT',
-      },
-      diagnostics = {
-        globals = { 'vim' },
-      },
-      workspace = {
-        library = vim.api.nvim_get_runtime_file("", true),
-        checkThirdParty = false,
-      },
+    settings = {
+        Lua = {
+            runtime = {
+                version = 'LuaJIT',
+            },
+            diagnostics = {
+                globals = { 'vim' },
+            },
+            workspace = {
+                library = vim.api.nvim_get_runtime_file("", true),
+                checkThirdParty = false,
+            },
+        },
     },
-  },
 }
 
 vim.lsp.config['basedpyright'] = {
-  cmd = { 'basedpyright-langserver', '--stdio' },
+    cmd = { 'basedpyright-langserver', '--stdio' },
 
-  filetypes = { 'python' },
+    filetypes = { 'python' },
 
-  root_markers = {
-    'pyproject.toml',
-    'setup.py',
-    'setup.cfg',
-    'requirements.txt',
-    '.git',
-  },
-
-  settings = {
-    python = {
-      analysis = {
-        typeCheckingMode = 'basic',
-        autoSearchPaths = true,
-        useLibraryCodeForTypes = true,
-      },
+    root_markers = {
+        'pyproject.toml',
+        'setup.py',
+        'setup.cfg',
+        'requirements.txt',
+        '.git',
     },
-  },
+
+    settings = {
+        python = {
+            analysis = {
+                typeCheckingMode = 'basic',
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+            },
+        },
+    },
 }
 
 vim.lsp.enable('lua_ls')
@@ -78,7 +77,7 @@ vim.pack.add({
 })
 
 require("nvim-treesitter").setup {
-    ensure_installed = {"lua", "cpp", "python" },
+    ensure_installed = { "lua", "cpp", "python" },
     sync_install = {},
     auto_install = {},
     highlight = {
@@ -116,73 +115,72 @@ blink.setup({
 })
 
 vim.pack.add({
-	{ src = "https://github.com/nvim-lua/plenary.nvim" },
-	{ src = "https://github.com/nvim-telescope/telescope.nvim" },
+    { src = "https://github.com/nvim-lua/plenary.nvim" },
+    { src = "https://github.com/nvim-telescope/telescope.nvim" },
 })
 
 local builtin = require('telescope.builtin')
 
 require('telescope').setup({
-	pickers = {
-		buffers = {
-			initial_mode = "normal",
-		},
-		bookmarks = {
-			initial_mode = "normal",
-		},
-	},
+    pickers = {
+        buffers = {
+            initial_mode = "normal",
+        },
+        bookmarks = {
+            initial_mode = "normal",
+        },
+    },
 })
 
 function SearchClasses()
-	builtin.lsp_workspace_symbols({
-		query = { "Class" },
-		prompt_title = "Search Classes"
-	})
+    builtin.lsp_workspace_symbols({
+        query = { "Class" },
+        prompt_title = "Search Classes"
+    })
 end
 
 function SearchFunctions()
-	builtin.lsp_dynamic_workspace_symbols({
-		query = { "Function", "Method" },
-		prompt_title = "Search Functions"
-	})
+    builtin.lsp_dynamic_workspace_symbols({
+        query = { "Function", "Method" },
+        prompt_title = "Search Functions"
+    })
 end
 
 function SearchVariables()
-	builtin.lsp_dynamic_workspace_symbols({
-		query = { "Variable", "Constant" },
-		prompt_title = "Search Variables"
-	})
+    builtin.lsp_dynamic_workspace_symbols({
+        query = { "Variable", "Constant" },
+        prompt_title = "Search Variables"
+    })
 end
 
-
 vim.pack.add({
-	{ src = "https://github.com/stevearc/conform.nvim" },
+    { src = "https://github.com/stevearc/conform.nvim" },
 })
 require("conform").setup({
-	format_on_save = {
-		timeout_ms = 500,
-		lsp_fallback = true,
-	},
-	formatters_by_ft = {
-		lua = { "stylua" },
-		json = { "jq" },
-		rust = { "rustfmt" },
-		python = { "black" },
-		htmldjango = { "djlint" },
-		html = { "djlint" },
-		javascript = { "prettier" },
-	},
+    format_on_save = {
+        timeout_ms = 500,
+        lsp_fallback = true,
+    },
+    formatters_by_ft = {
+        lua = { "stylua" },
+        json = { "jq" },
+        rust = { "rustfmt" },
+        python = { "black" },
+        htmldjango = { "djlint" },
+        html = { "djlint" },
+        javascript = { "prettier" },
+    },
 })
 
 --: oil
 vim.pack.add({
-	{ src = "https://github.com/stevearc/oil.nvim.git" },
+    { src = "https://github.com/stevearc/oil.nvim.git" },
 })
 require('oil').setup()
 
 --: diffview
 vim.pack.add({
-	{ src = "https://github.com/sindrets/diffview.nvim" },
+    { src = "https://github.com/sindrets/diffview.nvim" },
 })
 
 
@@ -201,16 +199,16 @@ vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 
 vim.api.nvim_create_autocmd('LspAttach', {
-  callback = function(args)
-    local opts = { buffer = args.buf, noremap = true, silent = true }
+    callback = function(args)
+        local opts = { buffer = args.buf, noremap = true, silent = true }
 
-    vim.bo[args.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+        vim.bo[args.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
-  end,
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+        vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+        vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+    end,
 })
 
 vim.keymap.set('n', '<leader>sF', builtin.find_files, { desc = "Find files" })
